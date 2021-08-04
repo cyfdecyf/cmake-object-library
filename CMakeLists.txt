@@ -4,9 +4,17 @@ project(object-library-test)
 
 # Create Object Library，note the OBJECT keyword here.
 add_library(obj OBJECT lib1.cc lib2.cc)
+# This compile options only apply to source files of obj target.
+# They are not propagated to targets that link to this target.
+target_compile_options(obj PUBLIC -fPIC)
 
 add_executable(a a.cc $<TARGET_OBJECTS:obj>)
+# This compile option only applies to a.cc
+target_compile_options(a PUBLIC -O2)
+
 add_executable(b b.cc $<TARGET_OBJECTS:obj>)
+# This compile option only applies to b.cc
+target_compile_options(b PUBLIC -O3 -ggdb)
 
 
 # Compare with static library.
